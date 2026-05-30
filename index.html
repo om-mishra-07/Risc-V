@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RISC-V Execution Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="bg-grid"></div>
+    <main class="page">
+      <header class="hero">
+        <p class="eyebrow">RV32I Visual Diagnostics</p>
+        <h1>RISC-V Core Dashboard</h1>
+        <p class="subtitle">
+          Compares single-cycle and 5-stage pipeline runs from demo trace logs.
+        </p>
+      </header>
+
+      <section class="controls card">
+        <div class="control-row">
+          <button id="refresh-btn" class="btn">Load Logs</button>
+          <label class="inline-label" for="row-limit">
+            Visible Trace Rows
+            <input id="row-limit" type="range" min="20" max="300" step="10" value="120" />
+            <span id="row-limit-value">120</span>
+          </label>
+        </div>
+        <p id="status" class="status">Waiting to load log files...</p>
+        <p class="hint">
+          Expected files: <span class="mono">demo_logs/single_cycle_trace.log</span> and
+          <span class="mono">demo_logs/pipeline_trace.log</span>
+        </p>
+      </section>
+
+      <section class="kpis" id="kpis"></section>
+
+      <section class="split">
+        <article class="card" id="pc-card">
+          <h2>Program Counter Timeline</h2>
+          <p class="card-desc">First N trace points by execution order.</p>
+          <div id="pc-chart" class="chart"></div>
+        </article>
+
+        <article class="card" id="reg-card">
+          <h2>Writeback Hot Registers</h2>
+          <p class="card-desc">How often each destination register appears in traces.</p>
+          <div id="register-bars" class="bars"></div>
+        </article>
+      </section>
+
+      <section class="split">
+        <article class="card">
+          <h2>Instruction Mix (Single-Cycle)</h2>
+          <p class="card-desc">Decoded from RV32I opcode field in SC trace instructions.</p>
+          <div id="sc-mix" class="bars"></div>
+        </article>
+
+        <article class="card">
+          <h2>Instruction Mix (Pipeline)</h2>
+          <p class="card-desc">Estimated by matching pipeline PC values to SC instruction addresses.</p>
+          <div id="pipe-mix" class="bars"></div>
+        </article>
+      </section>
+
+      <section class="split">
+        <article class="card">
+          <h2>Single-Cycle Recent Trace</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>PC</th>
+                  <th>RD</th>
+                  <th>WB</th>
+                  <th>Branch</th>
+                </tr>
+              </thead>
+              <tbody id="sc-trace"></tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>Pipeline Recent Trace</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>PC</th>
+                  <th>RD</th>
+                  <th>WB</th>
+                  <th>Stall</th>
+                  <th>Flush</th>
+                </tr>
+              </thead>
+              <tbody id="pipe-trace"></tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <script src="./app.js?v=3"></script>
+  </body>
+</html>

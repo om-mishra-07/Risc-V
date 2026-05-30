@@ -1,0 +1,30 @@
+module if_id_reg (
+  input  logic        clk,
+  input  logic        rst,
+  input  logic        stall,
+  input  logic        flush,
+  input  logic        valid_in,
+  input  logic [31:0] pc_in,
+  input  logic [31:0] instr_in,
+  output logic        valid_out,
+  output logic [31:0] pc_out,
+  output logic [31:0] instr_out
+);
+
+  always_ff @(posedge clk or posedge rst) begin
+    if (rst) begin
+      valid_out <= 1'b0;
+      pc_out    <= '0;
+      instr_out <= 32'h00000013;
+    end else if (flush) begin
+      valid_out <= 1'b0;
+      pc_out    <= '0;
+      instr_out <= 32'h00000013;
+    end else if (!stall) begin
+      valid_out <= valid_in;
+      pc_out    <= pc_in;
+      instr_out <= instr_in;
+    end
+  end
+
+endmodule
